@@ -21,7 +21,6 @@ func (rw *DirectoryReadWrite) Stat(name string) (os.FileInfo, error) { return os
 
 // ReadDir is proxied to ioutil.ReadDir
 func (rw *DirectoryReadWrite) ReadDir(dirname string) (fi []os.FileInfo, err error) {
-	// fmt.Printf("!!!!!!!!!!!!!!! %+v\n", dirname)
 	return ioutil.ReadDir(dirname)
 }
 

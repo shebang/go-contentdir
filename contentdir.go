@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"os"
 	"path"
-	// "reflect"
 )
 
 // contentdir provides directory organization by a defined content type. For
-// instance: If you want to store scheme files which define colors, you wil
+// instance: If you want to store scheme files which define colors, you will
 // be provided with the following directory structure:
 // * schemes/default
 // * schemes/material
@@ -81,7 +80,6 @@ type Directory struct {
 }
 
 // NewDirectory creates a new directory
-// func NewDirectory(rootPath string, contentTag string, filter Filter, rw ReaderWriter, flags ...OptionsNew) (dir *Directory, err error) {
 func NewDirectory(rootPath string, contentTag string, args ...interface{}) (dir *Directory, err error) {
 	var rw ReaderWriter = nil
 	// var filter *Filter = nil
@@ -89,17 +87,13 @@ func NewDirectory(rootPath string, contentTag string, args ...interface{}) (dir 
 	// var opts *Options = nil
 
 	for _, v := range args {
-		// fmt.Printf("11111111111111111111111111111111111111111111111111111111 v: %+v\n", v)
 		switch s := v.(type) {
 		case Filter:
-			// fmt.Printf("--------------- NewDirectory() Filter")
 			// filter = s
 		case ReaderWriter:
-			// fmt.Printf("--------------- !!!!!!!!!!!!!!!!!!!!!++++++++++++++++++######################### NewDirectory() ReaderWriter")
 			rw = s
 			break
 		case Options:
-			// fmt.Printf("--------------- NewDirectory() Options")
 			// opts = &s
 			break
 		}
@@ -138,18 +132,15 @@ func (dir *Directory) ReadDir() (err error) {
 	var userDir, userFile *FileInfo
 
 	userdirs, err := dir.rw.ReadDir(dir.PathInfo.ContentPath())
-	// fmt.Printf("!!!!!!!!!!!!!!! %+v\n", userdirs)
 	if err != nil {
 		return
 	}
 
 	for _, d := range userdirs {
 		userDir = NewFromOs(d)
-		fmt.Printf("!!!!!!!!!!!!!!! dir.Name()=%+v\n", userDir.Name())
 		files, err = dir.rw.ReadDir(path.Join(dir.PathInfo.ContentPath(), userDir.Name()))
 		for _, f := range files {
-			userFile = NewFromOs(f)
-			fmt.Printf("!!!!!!!!!!!!!!! file.Name()=%+v\n", userFile.Name())
+			userFile = NewFromOs(f, userDir)
 			if dir.filterFunc != nil {
 				if dir.filterFunc(f) {
 					dir.PathInfo.AddFile(userDir, userFile)

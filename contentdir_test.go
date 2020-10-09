@@ -3,7 +3,6 @@
 package contentdir
 
 import (
-	"fmt"
 	"os"
 	"path"
 	"testing"
@@ -74,65 +73,42 @@ func CreateReaderWriterMock(preset string) *ReaderWriterMock {
 	}
 }
 
-// func (fs *FileInfo) Name() string       { return fs.name }
-// func (fs *FileInfo) Size() int64        { return fs.size }
-// func (fs *FileInfo) Mode() os.FileMode  { return fs.mode }
-// func (fs *FileInfo) ModTime() time.Time { return fs.modTime }
-// func (fs *FileInfo) Sys() interface{}   { return nil }
-// func (fs *FileInfo) IsDir() bool        { return fs.isdir }
-
 func (mock *ReaderWriterMock) returnMockValues(path string, mockValue FSMockReturn) (fi []FileInfo, err error) {
-	// fmt.Printf("-- called (mock ReaderWriterMock) returnMockValues(%s string)", path)
 	var retval []FileInfo
 	retval, err = mockValue()
 	if err == nil {
-		// fmt.Printf(";;;; Mock: returns mockdata=%v\n", retval)
 		fi = retval
-	} else {
-		// fmt.Printf(";;;;;;; Mock: returns Error=%s\n", err.Error())
 	}
 	return
 }
 
 func (mock *ReaderWriterMock) ReadDir(path string) (fi []os.FileInfo, err error) {
-	fmt.Printf("!!!!!!!!!!!!!!! %+v\n", path)
-	// fmt.Printf("-- called (mock ReaderWriterMock) ReadDir(%s string)", path)
 	if _, ok := mock.testData[path]; ok {
 		if mockdata, ok := mock.testData[path]["readdir"]; ok {
 			var retval []FileInfo
 			retval, err = mockdata()
-			// var fileInfo []os.FileInfo
 			fi = make([]os.FileInfo, len(retval)-1)
 			for _, k := range retval {
 				fi = append(fi, &k)
 			}
 
-			if err == nil {
-				// fmt.Printf(";;;üüüüüüüüüüüüüüü; ReadDir: returns mockdata=%v\n", fi)
-			} else {
-				// fmt.Printf(";;;;;üüüüüüüüüüüüü;; ReadDir: returns Error=%s\n", err.Error())
-			}
 		}
 	}
 	return
 }
 func (mock *ReaderWriterMock) Mkdir(path string, perm os.FileMode) (err error) {
-	// fmt.Printf("## called (mock ReaderWriterMock) Mkdir(%s string)\n", path)
 	if _, ok := mock.testData[path]; ok {
 		if mockdata, ok := mock.testData[path]["mkdir"]; ok {
 			_, err = mockdata()
-			// fmt.Printf("#### called (mock ReaderWriterMock) Mkdir: retval: %v\n", retval)
 		}
 	}
 	return
 }
 func (mock *ReaderWriterMock) Rmdir(path string) error {
-	// fmt.Printf("called (mock ReaderWriterMock) Rmdir(%s string)", path)
 	return nil
 }
 
 func (mock *ReaderWriterMock) Stat(name string) (fi os.FileInfo, err error) {
-	// fmt.Printf(";; called (mock ReaderWriterMock) Stat(%s string)\n", name)
 	if _, ok := mock.testData[name]; ok {
 		if mockdata, ok := mock.testData[name]["stat"]; ok {
 			var fileInfo []FileInfo
@@ -140,11 +116,7 @@ func (mock *ReaderWriterMock) Stat(name string) (fi os.FileInfo, err error) {
 			if len(fileInfo) > 0 {
 				fi = &fileInfo[0]
 			}
-		} else {
-			// err = fmt.Errorf("ReaderWriterMock error: mock.testData[\"stat\"][%s] not defined", name)
 		}
-	} else {
-		err = fmt.Errorf("ReaderWriterMock error: mock.testData[\"stat\"] not defined")
 	}
 	return
 }

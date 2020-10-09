@@ -28,13 +28,19 @@ func NewFile(name string, args ...interface{}) *FileInfo {
 }
 
 // NewFromOs creates a new file from os.FileInfo.
-func NewFromOs(fi os.FileInfo) *FileInfo {
+func NewFromOs(fi os.FileInfo, parent ...*FileInfo) *FileInfo {
+	var di *FileInfo = nil
+
+	if len(parent) == 1 {
+		di = parent[0]
+	}
 	return &FileInfo{
 		name:    fi.Name(),
 		size:    fi.Size(),
 		mode:    fi.Mode(),
 		modTime: fi.ModTime(),
 		isdir:   fi.IsDir(),
+		DirInfo: di,
 	}
 }
 

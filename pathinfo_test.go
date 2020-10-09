@@ -26,8 +26,6 @@ func TestPathInfo(t *testing.T) {
 	if expectedString != gotString {
 		t.Errorf("expected value=%v, got=%v", expectedString, gotString)
 	}
-	// t.Logf("---------- DEBUG=%+v", collection)
-
 }
 
 func TestNewPathInfo(t *testing.T) {
@@ -45,8 +43,6 @@ func TestNewPathInfo(t *testing.T) {
 	if expectedString != gotString {
 		t.Errorf("expected value=%v, got=%v", expectedString, gotString)
 	}
-	// t.Logf("---------- DEBUG=%+v", collection)
-
 }
 
 func TestPathInfoAddFile(t *testing.T) {
@@ -97,12 +93,10 @@ func TestPathInfoAddFile(t *testing.T) {
 	pi.pathList.SortByName()
 	gotIndexValues := make([]string, 0)
 	for _, v := range pi.pathList.Values() {
-		t.Logf("file: %s\n", v.Name())
 		gotIndexValues = append(gotIndexValues, v.Name())
 	}
 	if !reflect.DeepEqual(expectedIndexValues, gotIndexValues) {
 		t.Errorf("expected value=%v, got=%v", expectedValues, gotValues)
 	}
 
-	t.Logf("IndexFiles: %+v", *pi.pathList)
 }
